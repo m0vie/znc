@@ -652,6 +652,8 @@ public:
 
 	/** Called when a client successfully logged in to ZNC. */
 	virtual void OnClientLogin();
+	/** Called when a client successfully logged in to ZNC, but before any channel joins are executed. This allows modifying buffers, for example. */
+	virtual void OnClientLoginEarly();
 	/** Called when a client disconnected from ZNC. */
 	virtual void OnClientDisconnect();
 	/** This module hook is called when a client sends a raw traffic line to ZNC.
@@ -1179,6 +1181,7 @@ public:
 	bool OnPrivBufferPlayLine(CClient& Client, CString& sLine);
 
 	bool OnClientLogin();
+	bool OnClientLoginEarly();
 	bool OnClientDisconnect();
 	bool OnUserRaw(CString& sLine);
 	bool OnUserCTCPReply(CString& sTarget, CString& sMessage);

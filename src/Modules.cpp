@@ -683,6 +683,7 @@ CModule::EModRet CModule::OnPrivBufferPlayLine2(CClient& Client, CString& sLine,
 }
 
 void CModule::OnClientLogin() {}
+void CModule::OnClientLoginEarly() {}
 void CModule::OnClientDisconnect() {}
 CModule::EModRet CModule::OnUserRaw(CString& sLine) { return CONTINUE; }
 CModule::EModRet CModule::OnUserCTCPReply(CString& sTarget, CString& sMessage) { return CONTINUE; }
@@ -844,6 +845,7 @@ bool CModules::OnMode(const CNick& OpNick, CChan& Channel, char uMode, const CSt
 bool CModules::OnRaw(CString& sLine) { MODHALTCHK(OnRaw(sLine)); }
 
 bool CModules::OnClientLogin() { MODUNLOADCHK(OnClientLogin()); return false; }
+bool CModules::OnClientLoginEarly() { MODUNLOADCHK(OnClientLoginEarly()); return false; }
 bool CModules::OnClientDisconnect() { MODUNLOADCHK(OnClientDisconnect()); return false; }
 bool CModules::OnUserRaw(CString& sLine) { MODHALTCHK(OnUserRaw(sLine)); }
 bool CModules::OnUserCTCPReply(CString& sTarget, CString& sMessage) { MODHALTCHK(OnUserCTCPReply(sTarget, sMessage)); }

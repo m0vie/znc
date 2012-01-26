@@ -630,6 +630,8 @@ void CIRCNetwork::ClientConnected(CClient *pClient) {
 		pClient->PutClient(":irc.znc.in 306 " + GetIRCNick().GetNick() + " :You have been marked as being away");
 	}
 
+	NETWORKMODULECALL(OnClientLoginEarly(), m_pUser, this, pClient, NOTHING);
+
 	const vector<CChan*>& vChans = GetChans();
 	for (size_t a = 0; a < vChans.size(); a++) {
 		if ((vChans[a]->IsOn()) && (!vChans[a]->IsDetached())) {
