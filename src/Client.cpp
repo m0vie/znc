@@ -259,8 +259,12 @@ void CClient::ReadLine(const CString& sData) {
 				const vector<CClient*>& vClients = GetClients();
 
 				for (CClient* pClient : vClients) {
-					if (pClient != this && (m_pNetwork->IsChan(sTarget) || pClient->HasSelfMessage())) {
-						pClient->PutClient(":" + GetNickMask() + " NOTICE " + sTarget + " :" + sMsg);
+					if (pClient != this) {
+						if (m_pNetwork->IsChan(sTarget) || pClient->HasSelfMessage()) {
+							pClient->PutClient(":" + GetNickMask() + " NOTICE " + sTarget + " :" + sMsg);
+						} else {
+							pClient->PutClient(":" + sTarget + " NOTICE " + sTarget + " :<" + GetNick() + "> " + sMsg);
+						}
 					}
 				}
 
@@ -318,8 +322,12 @@ void CClient::ReadLine(const CString& sData) {
 						const vector<CClient*>& vClients = GetClients();
 
 						for (CClient* pClient : vClients) {
-							if (pClient != this && (m_pNetwork->IsChan(sTarget) || pClient->HasSelfMessage())) {
-								pClient->PutClient(":" + GetNickMask() + " PRIVMSG " + sTarget + " :\001" + sCTCP + "\001");
+							if (pClient != this) {
+								if (m_pNetwork->IsChan(sTarget) || pClient->HasSelfMessage()) {
+									pClient->PutClient(":" + GetNickMask() + " PRIVMSG " + sTarget + " :\001" + sCTCP + "\001");
+								} else {
+									pClient->PutClient(":" + sTarget + " PRIVMSG " + sTarget + " :\001" + "ACTION " + "<" + GetNick() + "> " + sMessage + "\001");
+								}
 							}
 						}
 					} else {
@@ -375,8 +383,12 @@ void CClient::ReadLine(const CString& sData) {
 				const vector<CClient*>& vClients = GetClients();
 
 				for (CClient* pClient : vClients) {
-					if (pClient != this && (m_pNetwork->IsChan(sTarget) || pClient->HasSelfMessage())) {
-						pClient->PutClient(":" + GetNickMask() + " PRIVMSG " + sTarget + " :" + sMsg);
+					if (pClient != this) {
+						if (m_pNetwork->IsChan(sTarget) || pClient->HasSelfMessage()) {
+							pClient->PutClient(":" + GetNickMask() + " PRIVMSG " + sTarget + " :" + sMsg);
+						} else {
+							pClient->PutClient(":" + sTarget + " PRIVMSG " + sTarget + " :<" + GetNick() + "> " + sMsg);
+						}
 					}
 				}
 			}
