@@ -771,7 +771,7 @@ void CIRCSock::ReadLine(const CString& sData) {
 			// :blub!dummy@rox-8DBEFE92 WALLOPS :this is a test
 			CString sMsg = sRest.Token(0, true).TrimPrefix_n();
 
-			if (!m_pNetwork->IsUserOnline()) {
+			if (!m_pNetwork->IsUserOnline() || !m_pNetwork->GetUser()->AutoClearChanBuffer()) {
 				m_pNetwork->AddNoticeBuffer(":" + _NAMEDFMT(Nick.GetNickMask()) + " WALLOPS :{text}", sMsg);
 			}
 		} else if (sCmd.Equals("CAP")) {
@@ -947,7 +947,7 @@ bool CIRCSock::OnPrivNotice(CNick& Nick, CString& sMessage) {
 	IRCSOCKMODULECALL(OnPrivNotice(Nick, sMessage), &bResult);
 	if (bResult) return true;
 
-	if (!m_pNetwork->IsUserOnline()) {
+	if (!m_pNetwork->IsUserOnline() || !m_pNetwork->GetUser()->AutoClearChanBuffer()) {
 		// If the user is detached, add to the buffer
 		m_pNetwork->AddNoticeBuffer(":" + _NAMEDFMT(Nick.GetNickMask()) + " NOTICE {target} :{text}", sMessage);
 	}

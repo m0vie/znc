@@ -249,10 +249,19 @@ void CClient::ReadLine(const CString& sData) {
 			}
 
 			if (m_pNetwork) {
-				CChan* pChan = m_pNetwork->FindChan(sTarget);
+				if (m_pNetwork->IsChan(sTarget)) {
+					CChan* pChan = m_pNetwork->FindChan(sTarget);
 
-				if ((pChan) && (!pChan->AutoClearChanBuffer())) {
-					pChan->AddBuffer(":" + _NAMEDFMT(GetNickMask()) + " NOTICE " + _NAMEDFMT(sTarget) + " :{text}", sMsg);
+					if ((pChan) && (!pChan->AutoClearChanBuffer())) {
+						pChan->AddBuffer(":" + _NAMEDFMT(GetNickMask()) + " NOTICE " + _NAMEDFMT(sTarget) + " :{text}", sMsg);
+					}
+				} else {
+					if (!m_pUser->AutoClearQueryBuffer() || !m_pNetwork->IsUserOnline()) {
+						CQuery* pQuery = m_pNetwork->AddQuery(sTarget);
+						if (pQuery) {
+							pQuery->AddBuffer(":" + _NAMEDFMT(sTarget) + " NOTICE " + _NAMEDFMT(sTarget) + " :<" + GetNick() + "> {text}", sMsg);
+						}
+					}
 				}
 
 				// Relay to the rest of the clients that may be connected to this user
@@ -313,7 +322,7 @@ void CClient::ReadLine(const CString& sData) {
 							if (!m_pUser->AutoClearQueryBuffer() || !m_pNetwork->IsUserOnline()) {
 								CQuery* pQuery = m_pNetwork->AddQuery(sTarget);
 								if (pQuery) {
-									pQuery->AddBuffer(":" + _NAMEDFMT(GetNickMask()) + " PRIVMSG " + _NAMEDFMT(sTarget) + " :\001ACTION {text}\001", sMessage);
+									pQuery->AddBuffer(":" + _NAMEDFMT(sTarget) + " PRIVMSG " + _NAMEDFMT(sTarget) + " :\001ACTION <" + GetNick() + "> {text}\001", sMessage);
 								}
 							}
 						}
@@ -372,7 +381,7 @@ void CClient::ReadLine(const CString& sData) {
 					if (!m_pUser->AutoClearQueryBuffer() || !m_pNetwork->IsUserOnline()) {
 						CQuery* pQuery = m_pNetwork->AddQuery(sTarget);
 						if (pQuery) {
-							pQuery->AddBuffer(":" + _NAMEDFMT(GetNickMask()) + " PRIVMSG " + _NAMEDFMT(sTarget) + " :{text}", sMsg);
+							pQuery->AddBuffer(":" + _NAMEDFMT(sTarget) + " PRIVMSG " + _NAMEDFMT(sTarget) + " :<" + GetNick() + "> {text}", sMsg);
 						}
 					}
 				}
