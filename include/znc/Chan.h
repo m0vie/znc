@@ -56,8 +56,12 @@ public:
 		M_Except     = 'e'
 	} EModes;
 
+	static const unsigned int    m_uDefaultSortOrder;
+
 	CChan(const CString& sName, CIRCNetwork* pNetwork, bool bInConfig, CConfig *pConfig = NULL);
 	~CChan();
+
+	bool operator<(const CChan& other) const;
 
 	void Reset();
 	CConfig ToConfig() const;
@@ -118,6 +122,7 @@ public:
 	void SetAutoClearChanBuffer(bool b);
 	void InheritAutoClearChanBuffer(bool b);
 	void SetDetached(bool b = true) { m_bDetached = b; }
+	void SetSortOrder(unsigned int s) { m_uSortOrder = s; }
 	void SetInConfig(bool b);
 	void SetCreationDate(unsigned long u) { m_ulCreationDate = u; }
 	void Disable() { m_bDisabled = true; }
@@ -144,6 +149,7 @@ public:
 	size_t GetNickCount() const { return m_msNicks.size(); }
 	bool AutoClearChanBuffer() const { return m_bAutoClearChanBuffer; }
 	bool IsDetached() const { return m_bDetached; }
+	unsigned int GetSortOrder() const { return m_uSortOrder; }
 	bool InConfig() const { return m_bInConfig; }
 	unsigned long GetCreationDate() const { return m_ulCreationDate; }
 	bool IsDisabled() const { return m_bDisabled; }
@@ -172,6 +178,7 @@ protected:
 	CString                      m_sDefaultModes;
 	std::map<CString,CNick>      m_msNicks;       // Todo: make this caseless (irc style)
 	CBuffer                      m_Buffer;
+	unsigned int                 m_uSortOrder;
 
 	bool                         m_bModeKnown;
 	std::map<unsigned char, CString> m_musModes;
